@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="assets_frontend" inherit_id="web.assets_frontend">
+    <xpath expr="." position="inside">
+      <script src="/portal_orders/static/src/js/portal.js" type="text/javascript" />
+    </xpath>
+  </template>
+
+  <template id="portal_layout" name="Portal Order Entries" inherit_id="portal.portal_breadcrumbs" priority="10">
+    <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+      <li t-if="page_name == 'portal_orders'" t-attf-class="breadcrumb-item #{'active ' if not order else ''}">
+        <a t-if="order" t-attf-href="/my/portal_orders?{{ keep_query() }}">Portal Orders</a>
+        <t t-else="">Portal Orders</t>
+      </li>
+
+      <li t-if="order" class="breadcrumb-item active col-8 col-lg-10 text-truncate">
+        <span t-field="order.name" />
+      </li>
+    </xpath>
+  </template>
+
+  <template id="portal_my_home" name="Show Portal Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="10">
+    <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+      <t t-call="portal.portal_docs_entry">
+        <t t-set="title">Portal Orders</t>
+        <t t-set="url" t-value="'/my/portal_orders'" />
+        <t t-set="placeholder_count" t-value="'portal_orders_count'" />
+      </t>
+    </xpath>
+  </template>
+
+  <template id="portal_my_orders" name="My Portal Orders">
+    <t t-call="portal.portal_layout">
+      <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+      <t t-call="portal.portal_searchbar">
+        <t t-set="title">Portal Orders</t>
+
+        <div class="form-inline ml-lg-4" t-if="not isManager">
+          <button class="btn btn-success btn-sm" name='new_order' data-toggle="modal" data-target=".modal_new_order" title="Create New Portal Order" aria-label="Create New Portal Order">
+            <i class="fa fa-plus" />
+            Create New
+          </button>
+        </div>
+      </t>
+
+
+      <div class="modal fade modal_new_order" role="form">
+        <div class="modal-dialog">
+          <form method="POST" enctype="multipart/form-data" class="modal-content js_website_submit_form new_order_form">
+            <input type="hidden" class="csrf_token" name="csrf_token" t-att-value="request.csrf_token()" />
+            <header class="modal-header">
+              <h4 class="modal-title">New Portal Order</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+            </header>
+            <main class="modal-body" id="new-order-dialog">
+              <div class="form-group">
+                <label class="col-form-label" for="productsList">Product: </label>
+                <span class="s_website_form_mark">*</span>
+                <select class="form-control products_list" name="productsList" required="">
+                  <option>
+                    <span></span>
+                  </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label" for="title">Amount</label>
+                <span class="s_website_form_mark">*</span>
+                <input type='text' name="amount" class="form-control amount" required="" />
+              </div>
+              <div class="form-group">
+                <label class="col-form-label" for="suppliers">Suppliers:</label>
+                <span class="s_website_form_mark">*</span>
+                <div name="suppliers" class="suppliers"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-form-label applied_tax_rate"></label>
+              </div>
+
+              <div class="form-group">
+                <div class="totals"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label" for="file">Signed request (PDF file, max 5MB):</label>
+                <span class="s_website_form_mark">*</span>
+                <input accept=".pdf" name="file" class="oe_import_file signature" type="file" required="" />
+              </div>
+            </main>
+            <footer class="modal-footer">
+              <button type="button" class="btn btn-secondary cancel_order" data-dismiss="modal">Cancel</button>
+              <button t-attf-class="btn btn-primary new_order_confirm">Confirm</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+
+
+      <t t-if="not orders">
+        <div class="alert alert-warning mt8" role="alert">
+          No orders
+        </div>
+      </t>
+
+
+      <t t-if="orders" t-call="portal.portal_table">
+        <thead>
+          <tr>
+            <td>
+              <span style="font-weight:bold">Order Number</span>
+            </td>
+            <td t-if="isManager">
+              <span style="font-weight:bold">Employee</span>
+            </td>
+            <td>
+              <span style="font-weight:bold">Product</span>
+            </td>
+            <td>
+              <span style="font-weight:bold">Amount</span>
+            </td>
+            <td>
+              <span style="font-weight:bold">Creation Date</span>
+            </td>
+            <td>
+              <span style="font-weight:bold">No. of Attachments</span>
+            </td>
+            <td>
+              <span style="font-weight:bold">State</span>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <t t-foreach="orders" t-as="order">
+            <tr>
+              <td>
+                <a t-attf-href="/my/portal_orders/#{order.id}">
+                  <span t-field="order.name" />
+                </a>
+              </td>
+              <td t-if="isManager">
+                <span t-field="order.user_id.partner_id.name" />
+              </td>
+              <td>
+                <span t-field="order.product_id.name" />
+              </td>
+              <td>
+                <span t-field="order.amount" />
+              </td>
+              <td>
+                <span t-field="order.date_created" t-options='{"widget": "date"}' />
+              </td>
+              <td>
+                <span t-field="order.attachments_count" />
+              </td>
+              <td>
+                <span t-field="order.state" />
+              </td>
+            </tr>
+          </t>
+        </tbody>
+      </t>
+    </t>
+  </template>
+
+  <template id="portal_my_order" name="My Order">
+    <t t-call="portal.portal_layout">
+      <t t-call="portal.portal_record_layout">
+
+        <t t-set="card_header">
+          <div class="row mb-3">
+            <div class="form-inline ml-lg-4" t-if="isManager and order.state == 'draft'">
+              <button class="btn btn-success btn-sm approve_portal_order" name='approve_order' t-att-data-id="order.id" title="Approve Order">
+                  Approve
+                </button>
+            </div>
+
+            <div class="form-inline ml-lg-4" t-if="isManager and order.state == 'draft'">
+              <button class="btn btn-success btn-sm reject_portal_order" name='reject_order' t-att-data-id="order.id" title="Reject Order">
+                  Reject
+                </button>
+            </div>
+
+            <div class="form-inline ml-lg-4" t-if="not isManager and order.state == 'approved'">
+              <button class="btn btn-success btn-sm buy_portal_order" name='buy_order' t-att-data-id="order.id" title="Buy Product">
+                  Buy Product
+                </button>
+            </div>
+          </div>
+
+          <div class="row no-gutters">
+            <div class="col-3">
+              <span style="font-weight:bold">Order Number:</span>
+              <span t-field="order.name" class="text-truncate" />
+            </div>
+            <div class="col-3">
+              <span style="font-weight:bold">State:</span>
+              <span t-field="order.state"></span>
+            </div>
+            <div class="col-3">
+              <span style="font-weight:bold">Date Created:</span>
+              <span t-field="order.date_created" t-options='{"widget": "date"}'></span>
+            </div>
+            <div class="col-3">
+              <span style="font-weight:bold">Picking Date:</span>
+              <span t-field="order.picking_date"></span>
+            </div>
+          </div>
+        </t>
+        <t t-set="card_body">
+          <div class="row">
+            <h4>User Info:</h4>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <span style="font-weight:bold">Name:</span>
+              <div t-field="order.user_id.name"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Email:</span>
+              <div t-field="order.user_id.partner_id.email"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Company:</span>
+              <div t-field="order.user_id.company_id.name"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Address:</span>
+              <span t-field="order.user_id.partner_id.street" />
+              ,
+              <span t-field="order.user_id.partner_id.street2" />
+              ,
+              <span t-field="order.user_id.partner_id.zip" />
+              ,
+              <span t-field="order.user_id.partner_id.city" />
+              ,
+              <span t-field="order.user_id.partner_id.state_id.name" />
+              ,
+              <span t-field="order.user_id.partner_id.country_id.name" />
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <span style="font-weight:bold">Mobile/Cell:</span>
+              <div t-field="order.user_id.partner_id.mobile"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Phone:</span>
+              <div t-field="order.user_id.partner_id.phone"></div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <h4>Product Info:</h4>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <img t-attf-src="data:image/jpg;base64,{{ order.product_id.image_1920 }}" style="align:left; width:85px;height:85px;" />
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Product Name:</span>
+              <div t-field="order.product_id.name"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Product Category:</span>
+              <div t-field="order.product_id.categ_id.name"></div>
+            </div>
+            <div class="col-md-3">
+              <div t-foreach="order.product_id.product_template_attribute_value_ids" t-as="l">
+                <div>
+                  <strong>
+                    <span t-field="l.attribute_id.name" />
+                    :
+                  </strong>
+                  <span t-field="l.name" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <span style="font-weight:bold">Spplier:</span>
+              <div t-field="order.supplierinfo_id.name"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Amount:</span>
+              <span t-field="order.amount"></span>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Net Unit Price:</span>
+              <div t-field="order.supplierinfo_id.price"></div>
+            </div>
+            <div class="col-md-3">
+              <span style="font-weight:bold">Gross Price:</span>
+              <div t-field="order.gross_price"></div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-2">
+              <span style="font-weight:bold">Applied Tax:</span>
+              <span>%</span>
+              <span t-field="order.tax"></span>
+            </div>
+            <div class="col-md-2">
+              <span style="font-weight:bold">Taxed Price:</span>
+              <div t-field="order.taxed_price"></div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <h4>Attachments:</h4>
+          </div>
+          <div class="row">
+            <ul>
+              <t t-foreach="order.attachment_ids" t-as="a">
+                <li>
+                  <a t-attf-href="data:application/pdf;base64,{{ a.datas }}" target="new">
+                    <strong>
+                      <span t-field="a.name" />
+                    </strong>
+                  </a>
+                </li>
+              </t>
+            </ul>
+          </div>
+
+        </t>
+      </t>
+    </t>
+  </template>
+
+</odoo>

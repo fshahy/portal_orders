@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <record id="global_purchase_tax" model="account.tax">
+      <field name="name">Global Purchase Tax</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="amount">66</field>
+    </record>
+
+    <record id="seq_portal_order" model="ir.sequence">
+      <field name="name">Portal Purchase Order</field>
+      <field name="code">portal.order</field>
+      <field name="prefix">PPO</field>
+      <field name="padding">4</field>
+    </record>
+
+    <!-- local mailhog smtp server -->
+    <record id="local_mail_server" model="ir.mail_server">
+      <field name="name">localhost</field>
+      <field name="smtp_host">127.0.0.1</field>
+      <field name="smtp_port">1025</field>
+    </record>
+
+  </data>
+</odoo>

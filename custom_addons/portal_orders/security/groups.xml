@@ -1,0 +1,17 @@
+<odoo>
+  <data>
+
+    <record id="group_portal_employee" model="res.groups">
+      <field name="name">Portal Orders (Employee)</field>
+      <field name="comment">Can place purchase orders from portal</field>
+      <field name="category_id" ref="base.module_category_user_type" />
+    </record>
+
+    <record id="group_portal_manager" model="res.groups">
+      <field name="name">Portal Orders (Manager)</field>
+      <field name="comment">Can approve or reject purchase orders from portal</field>
+      <field name="category_id" ref="base.module_category_user_type" />
+    </record>
+
+  </data>
+</odoo>

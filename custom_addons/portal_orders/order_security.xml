@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="own_portal_orders_rule" model="ir.rule">
+    <field name="name">Own Portal Orders</field>
+    <field name="model_id" ref="portal_orders.model_portal_order" />
+    <field name="domain_force">[('user_id', '=', user.id)]</field>
+    <field name="groups" eval="[(4, ref('portal_orders.group_portal_employee'))]" />
+  </record>
+
+  <record id="all_portal_orders_rule" model="ir.rule">
+    <field name="name">All Portal Orders</field>
+    <field name="model_id" ref="portal_orders.model_portal_order" />
+    <field name="domain_force">[(1, '=', 1)]</field>
+    <field name="groups" eval="[(4, ref('portal_orders.group_portal_manager'))]" />
+  </record>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="view_set_picking_date" model="ir.ui.view">
+      <field name="name">view.set.picking.date.form</field>
+      <field name="model">portal.order.picking.date.wizard</field>
+      <field name="arch" type="xml">
+        <form string="Create Debit Note">
+          <field name="picking_date" />
+
+          <footer>
+            <button string='Set Picking Date' name="set_picking_date" type="object" class="btn-primary" />
+            <button string="Cancel" class="btn-secondary" special="cancel" />
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_view_set_picking_date" model="ir.actions.act_window">
+      <field name="name">Set Picking Date</field>
+      <field name="res_model">portal.order.picking.date.wizard</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_set_picking_date" />
+      <field name="target">new</field>
+      <field name="binding_model_id" ref="portal_orders.model_portal_order" />
+    </record>
+  </data>
+</odoo>

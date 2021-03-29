@@ -1,0 +1,78 @@
+<odoo>
+  <data>
+
+    <record id='view_portal_order_form' model='ir.ui.view'>
+      <field name="name">portal.order.form</field>
+      <field name="model">portal.order</field>
+      <field name="arch" type="xml">
+        <form string="Portal Order">
+          <header>
+            <button name="set_done" string='Done' type='object' groups="base.group_user" attrs="{'invisible': [ ('state', '!=', 'ready_to_pick')]}" />
+          </header>
+
+          <sheet>
+            <group>
+              <field name="name" attrs="{'readonly': [('name','!=','New')]}" />
+              <field name="user_id" readonly="1" />
+              <field name="product_id" readonly="1" />
+              <field name="amount" readonly="1" />
+              <field name="tax" readonly="1" />
+              <field name="supplierinfo_id" readonly="1" />
+              <field name="date_created" readonly="1" />
+              <field name="picking_date" readonly="1" />
+              <field name="state" />
+            </group>
+            <group>
+              <field name="attachment_ids" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_portal_order_tree" model="ir.ui.view">
+      <field name="name">portal.order.tree</field>
+      <field name="model">portal.order</field>
+      <field name="arch" type="xml">
+        <tree string="Portal Orders">
+          <field name="name" />
+          <field name="user_id" />
+          <field name="product_id" />
+          <field name="amount" />
+          <field name="date_created" />
+          <field name="state" />
+        </tree>
+      </field>
+    </record>
+
+    <record id='portal_order_action_employee' model='ir.actions.act_window'>
+      <field name="name">Portal Orders (Employee)</field>
+      <field name="res_model">portal.order</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_portal_order_tree" />
+      <field name="groups_id" eval="[(4, ref('portal_orders.group_portal_employee'))]" />
+    </record>
+
+    <record id='portal_order_action_manager' model='ir.actions.act_window'>
+      <field name="name">Portal Orders (Manager)</field>
+      <field name="res_model">portal.order</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_portal_order_tree" />
+      <field name="groups_id" eval="[(4, ref('portal_orders.group_portal_manager'))]" />
+    </record>
+
+    <!-- backend users can see orders in state: in_progress, ready_to_pick -->
+    <record id='portal_order_action_internal' model='ir.actions.act_window'>
+      <field name="name">Portal Orders (Internal)</field>
+      <field name="res_model">portal.order</field>
+      <field name="view_mode">form,tree</field>
+      <field name="view_id" ref="view_portal_order_tree" />
+      <field name="groups_id" eval="[(4, ref('base.group_user'))]" />
+      <field name="domain" eval="[('state','in',('in_progress', 'ready_to_pick'))]" />
+    </record>
+
+    <menuitem name="Portal Orders" id="portal_orders" sequence="2" groups="base.group_user" />
+    <menuitem action="portal_order_action_internal" name="Portal Orders" parent="portal_orders" id="portal_order_menu" groups="base.group_user" sequence="1" />
+
+  </data>
+</odoo>

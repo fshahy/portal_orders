@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+
+    <!-- Vendors -->
+    <record id="portal_vendor_1" model="res.partner">
+      <field name="name">Vendor 1</field>
+      <field name="is_company">1</field>
+    </record>
+
+    <record id="portal_vendor_2" model="res.partner">
+      <field name="name">Vendor 2</field>
+      <field name="is_company">1</field>
+    </record>
+
+    <record id="portal_vendor_3" model="res.partner">
+      <field name="name">Vendor 3</field>
+      <field name="is_company">1</field>
+    </record>
+
+    <record id="portal_vendor_4" model="res.partner">
+      <field name="name">Vendor 4</field>
+      <field name="is_company">1</field>
+    </record>
+
+    <!-- Supplier Infos -->
+    <record id="supplier_info_1" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_1" />
+      <field name="price">10</field>
+      <field name="delay">3</field>
+    </record>
+
+    <record id="supplier_info_2" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_2" />
+      <field name="price">12</field>
+      <field name="delay">1</field>
+    </record>
+
+    <record id="supplier_info_3" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_3" />
+      <field name="price">14</field>
+      <field name="delay">1</field>
+    </record>
+
+    <record id="supplier_info_4" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_4" />
+      <field name="price">16</field>
+      <field name="delay">2</field>
+    </record>
+
+    <record id="supplier_info_5" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_1" />
+      <field name="price">10</field>
+      <field name="delay">1</field>
+    </record>
+
+    <record id="supplier_info_6" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_2" />
+      <field name="price">12</field>
+      <field name="delay">2</field>
+    </record>
+
+    <record id="supplier_info_7" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_3" />
+      <field name="price">14</field>
+      <field name="delay">3</field>
+    </record>
+
+    <record id="supplier_info_8" model="product.supplierinfo">
+      <field name="name" ref="portal_vendor_4" />
+      <field name="price">16</field>
+      <field name="delay">2</field>
+    </record>
+
+    <!-- Product Categories -->
+    <record id="product_category_1" model="product.category">
+      <field name="parent_id" ref="product.product_category_all" />
+      <field name="name">Product Category 1</field>
+    </record>
+
+    <record id="product_category_2" model="product.category">
+      <field name="parent_id" ref="product.product_category_all" />
+      <field name="name">Product Category 2</field>
+    </record>
+
+    <!-- Users -->
+    <record id="partner_portal_manager" model="res.partner">
+      <field name="name">John Doe</field>
+      <field name="email">john@example.com</field>
+    </record>
+    <record id="portal_manager" model="res.users">
+      <field name="name">John Doe</field>
+      <field name="login">john@example.com</field>
+      <field name="password">john</field>
+      <field name="groups_id" eval="[(6, 0, [ref('group_portal_manager')])]" />
+      <field name="action_id" ref="portal_order_action_manager" />
+      <field name="partner_id" ref="partner_portal_manager" />
+    </record>
+
+    <record id="partner_portal_employee_1" model="res.partner">
+      <field name="name">Alice Anderson</field>
+      <field name="email">alice@example.com</field>
+      <field name="portal_order_limit">2</field>
+      <field name="portal_orders_tax_rate">20</field>
+      <field name="allowed_product_category_ids" eval="[(4, ref('product_category_1'))]" />
+    </record>
+    <record id="portal_employee_1" model="res.users">
+      <field name="name">Alice Anderson</field>
+      <field name="login">alice@example.com</field>
+      <field name="password">alice</field>
+      <field name="groups_id" eval="[(6, 0, [ref('group_portal_employee')])]" />
+      <field name="action_id" ref="portal_order_action_employee" />
+      <field name="partner_id" ref="partner_portal_employee_1" />
+    </record>
+
+    <record id="partner_portal_employee_2" model="res.partner">
+      <field name="name">Bob Bradley</field>
+      <field name="email">bob@example.com</field>
+      <field name="portal_order_limit">3</field>
+      <field name="portal_orders_tax_rate">0</field>
+      <field name="allowed_product_category_ids" eval="[(4, ref('product_category_2'))]" />
+    </record>
+    <record id="portal_employee_2" model="res.users">
+      <field name="name">Bob Bradley</field>
+      <field name="login">bob@example.com</field>
+      <field name="password">bob</field>
+      <field name="groups_id" eval="[(6, 0, [ref('group_portal_employee')])]" />
+      <field name="action_id" ref="portal_order_action_employee" />
+      <field name="partner_id" ref="partner_portal_employee_2" />
+    </record>
+
+    <record id="internal_user_1" model="res.users">
+      <field name="name">Ingrid</field>
+      <field name="login">ingrid@example.com</field>
+      <field name="password">ingrid</field>
+      <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('purchase.group_purchase_user')])]" />
+      <field name="action_id" ref="portal_order_action_internal" />
+    </record>
+
+    <!-- Product Attributes -->
+    <!-- Color -->
+    <record id="product_attribute_color" model="product.attribute">
+      <field name="name">Color</field>
+      <field name="sequence">10</field>
+    </record>
+    <record id="product_attribute_value_1" model="product.attribute.value">
+      <field name="name">Blue</field>
+      <field name="attribute_id" ref="product_attribute_color" />
+      <field name="sequence">1</field>
+    </record>
+    <record id="product_attribute_value_2" model="product.attribute.value">
+      <field name="name">Red</field>
+      <field name="attribute_id" ref="product_attribute_color" />
+      <field name="sequence">5</field>
+    </record>
+    <record id="product_attribute_value_3" model="product.attribute.value">
+      <field name="name">Black</field>
+      <field name="attribute_id" ref="product_attribute_color" />
+      <field name="sequence">10</field>
+    </record>
+    <record id="product_attribute_value_4" model="product.attribute.value">
+      <field name="name">White</field>
+      <field name="attribute_id" ref="product_attribute_color" />
+      <field name="sequence">15</field>
+    </record>
+    <!-- Size -->
+    <record id="product_attribute_size" model="product.attribute">
+      <field name="name">Size</field>
+      <field name="sequence">20</field>
+    </record>
+    <record id="product_attribute_value_5" model="product.attribute.value">
+      <field name="name">Small</field>
+      <field name="attribute_id" ref="product_attribute_size" />
+      <field name="sequence">2</field>
+    </record>
+    <record id="product_attribute_value_6" model="product.attribute.value">
+      <field name="name">Medium</field>
+      <field name="attribute_id" ref="product_attribute_size" />
+      <field name="sequence">7</field>
+    </record>
+    <record id="product_attribute_value_7" model="product.attribute.value">
+      <field name="name">Large</field>
+      <field name="attribute_id" ref="product_attribute_size" />
+      <field name="sequence">12</field>
+    </record>
+    <record id="product_attribute_value_8" model="product.attribute.value">
+      <field name="name">X Large</field>
+      <field name="attribute_id" ref="product_attribute_size" />
+      <field name="sequence">17</field>
+    </record>
+
+    <!-- Products Templates -->
+    <record id="product_template_product_1" model="product.template">
+      <field name="name">Product 1</field>
+      <field name="sale_ok" eval="False" />
+      <field name="purchase_ok" eval="True" />
+      <field name="categ_id" ref="product_category_1" />
+      <field name="seller_ids" eval="[(6, 0, [ref('supplier_info_1'), ref('supplier_info_2')])]" />
+      <field name="image_1920" type="base64" file="portal_orders/demo/product1.jpeg" />
+    </record>
+
+    <record id="product_template_product_2" model="product.template">
+      <field name="name">Product 2</field>
+      <field name="sale_ok" eval="False" />
+      <field name="purchase_ok" eval="True" />
+      <field name="categ_id" ref="product_category_2" />
+      <field name="seller_ids" eval="[(6, 0, [ref('supplier_info_3'), ref('supplier_info_4')])]" />
+      <field name="image_1920" type="base64" file="portal_orders/demo/product2.jpeg" />
+    </record>
+
+    <!-- Product Attribute Lines - Product 1 -->
+    <record id="product_tmpl_product_1_attribute_line_colors" model="product.template.attribute.line">
+      <field name="product_tmpl_id" ref="product_template_product_1" />
+      <field name="attribute_id" ref="product_attribute_color" />
+      <field name="value_ids" eval="[(6, 0, [
+      ref('product_attribute_value_1'), 
+      ref('product_attribute_value_2'),
+      ref('product_attribute_value_3'),
+      ref('product_attribute_value_4'),
+      ])]" />
+    </record>
+    <record id="product_tmpl_product_1_attribute_line_sizes" model="product.template.attribute.line">
+      <field name="product_tmpl_id" ref="product_template_product_1" />
+      <field name="attribute_id" ref="product_attribute_size" />
+      <field name="value_ids" eval="[(6, 0, [
+      ref('product_attribute_value_5'), 
+      ref('product_attribute_value_6'),
+      ref('product_attribute_value_7'),
+      ref('product_attribute_value_8'),
+      ])]" />
+    </record>
+
+    <!-- Product Attribute Lines - Product 2 -->
+    <record id="product_tmpl_product_2_attribute_line_colors" model="product.template.attribute.line">
+      <field name="product_tmpl_id" ref="product_template_product_2" />
+      <field name="attribute_id" ref="product_attribute_color" />
+      <field name="value_ids" eval="[(6, 0, [
+      ref('product_attribute_value_1'), 
+      ref('product_attribute_value_2'),
+      ref('product_attribute_value_3'),
+      ref('product_attribute_value_4'),
+      ])]" />
+    </record>
+    <record id="product_tmpl_product_2_attribute_line_sizes" model="product.template.attribute.line">
+      <field name="product_tmpl_id" ref="product_template_product_2" />
+      <field name="attribute_id" ref="product_attribute_size" />
+      <field name="value_ids" eval="[(6, 0, [
+      ref('product_attribute_value_5'), 
+      ref('product_attribute_value_6'),
+      ref('product_attribute_value_7'),
+      ref('product_attribute_value_8'),
+      ])]" />
+    </record>
+
+    <!-- Porta Orders -->
+    <record id="portal_order_1" model="portal.order">
+      <field name="name">New</field>
+      <field name="user_id" ref="portal_employee_1" />
+      <field name="product_id" ref="product_template_product_1" />
+      <field name="supplierinfo_id" ref="supplier_info_1" />
+      <field name="amount">1</field>
+      <field name="tax">10</field>
+    </record>
+
+    <!-- Attachments -->
+    <record id="attach_1" model="ir.attachment.custom">
+      <field name="name">attach_1.pdf</field>
+      <field name="datas" type="base64" file="portal_orders/demo/attach_1.pdf"></field>
+      <field name="res_model">portal.order</field>
+      <!-- <field name="res_id" ref="portal_orders.order_1" /> -->
+    </record>
+
+    <record id="attach_2" model="ir.attachment.custom">
+      <field name="name">attach_2.pdf</field>
+      <field name="datas" type="base64" file="portal_orders/demo/attach_2.pdf"></field>
+      <field name="res_model">portal.order</field>
+      <!-- <field name="res_id" ref="portal_orders.order_1" /> -->
+    </record>
+
+    <record id="attach_3" model="ir.attachment.custom">
+      <field name="name">attach_3.pdf</field>
+      <field name="datas" type="base64" file="portal_orders/demo/attach_3.pdf"></field>
+      <field name="res_model">portal.order</field>
+      <!-- <field name="res_id" ref="portal_orders.order_1" /> -->
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="email_template_portal_order_created" model="mail.template">
+      <field name="name">Portal Order by ${object.name}</field>
+      <field name="model_id" ref="portal_orders.model_portal_order" />
+      <field name="email_from">${object.company_id.email}</field>
+      <field name="email_to">${object.env.ref('portal_orders.portal_manager').login}</field>
+      <field name="subject">Portal Order by ${object.user_id.name}</field>
+      <field name="body_html" type="html">
+        <div>
+          <p>Dear ${object.env.ref('portal_orders.portal_manager').name},</p>
+          <p>the employee ${object.user_id.name} has requested the following product: ${object.product_id.name}.</p>
+          <p>
+            Please, check the order
+            <a href="${ object.env['ir.config_parameter'].get_param('web.base.url') }/my/portal_orders/${object.id}">here</a>
+            to approve it or reject it.
+          </p>
+
+          <p>Regards.</p>
+        </div>
+      </field>
+    </record>
+
+    <record id="email_template_portal_order_approved" model="mail.template">
+      <field name="name">Portal Order Approved: ${object.name}</field>
+      <field name="model_id" ref="portal_orders.model_portal_order" />
+      <field name="email_from">${object.company_id.email}</field>
+      <field name="email_to">${object.user_id.partner_id.email}</field>
+      <field name="subject">Portal Order Approved: ${object.name}</field>
+      <field name="body_html" type="html">
+        <div>
+          <p>Dear ${object.user_id.name},</p>
+          <p>your manager has approved the order. Please go to your order and click on the button "Buy Product":</p>
+          <p>
+            <a href="${ object.env['ir.config_parameter'].get_param('web.base.url') }/my/portal_orders/${object.id}">here</a>
+          </p>
+          <p>Regards.</p>
+        </div>
+      </field>
+    </record>
+
+    <record id="email_template_portal_order_rejected" model="mail.template">
+      <field name="name">Portal Order Rejected: ${object.name}</field>
+      <field name="model_id" ref="portal_orders.model_portal_order" />
+      <field name="email_from">${object.company_id.email}</field>
+      <field name="email_to">${object.user_id.partner_id.email}</field>
+      <field name="subject">Portal Order Rejected: ${object.name}</field>
+      <field name="body_html" type="html">
+        <div>
+          <p>Dear ${object.user_id.name},</p>
+          <p>sadly your order was rejected for this month, but you can create a new one for the same product or a different one next month.</p>
+
+          <p>Regards.</p>
+        </div>
+      </field>
+    </record>
+
+    <record id="email_template_portal_order_ready" model="mail.template">
+      <field name="name">Portal Order Ready: ${object.name}</field>
+      <field name="model_id" ref="portal_orders.model_portal_order" />
+      <field name="email_from">${object.company_id.email}</field>
+      <field name="email_to">${object.user_id.partner_id.email}</field>
+      <field name="subject">Portal Order Ready: ${object.name}</field>
+      <field name="body_html" type="html">
+        <div>
+          <p>Dear ${object.user_id.name},</p>
+          <p>your product ${object.product_id.name} from the order ${object.name} is ready.</p>
+          <p>You can pick it at the office on ${object.picking_date} </p>
+
+          <p>Regards.</p>
+        </div>
+      </field>
+    </record>
+
+  </data>
+</odoo>
