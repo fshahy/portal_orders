@@ -22,6 +22,7 @@ backend access to our accounting team to confirm the sales, purchases, invoices,
 * Each user sees only his/her own orders.
 * Manager sees all orders.
 * Uses product variations.
+* Can search orders in list view.
 * Users can only see producs from categories they are allowed to.
 * Access ir.attachment model from portal.
 * Use email templates for sending emails.
