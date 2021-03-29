@@ -1,6 +1,5 @@
-from odoo import api, fields, models, _
+from odoo import fields, models
 from odoo.exceptions import UserError
-from odoo.tools.misc import get_lang
 
 
 class SePickingDate(models.TransientModel):
@@ -32,4 +31,3 @@ class SePickingDate(models.TransientModel):
             return {}
         else:
             raise UserError(_("Order already has a picking date."))
-            # return {}

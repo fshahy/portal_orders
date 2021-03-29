@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from odoo import http
 import base64
 from odoo.http import request
@@ -11,7 +10,8 @@ class CustomerPortal(CustomerPortal):
         values = super()._prepare_home_portal_values(counters)
 
         if "portal_orders_count" in counters:
-            values["portal_orders_count"] = request.env["portal.order"].search_count([])
+            values["portal_orders_count"] = request.env["portal.order"].search_count([
+            ])
 
         return values
 
@@ -21,7 +21,8 @@ class CustomerPortal(CustomerPortal):
         print("**", search_in)
         print("**", search)
 
-        isManager = request.env.user.has_group("portal_orders.group_portal_manager")
+        isManager = request.env.user.has_group(
+            "portal_orders.group_portal_manager")
 
         searchbar_inputs = {
             "name": {
@@ -41,9 +42,11 @@ class CustomerPortal(CustomerPortal):
         if search and search_in:
             search_domain = []
             if search_in in ("name"):
-                search_domain = OR([search_domain, [("name", "ilike", search)]])
+                search_domain = OR(
+                    [search_domain, [("name", "ilike", search)]])
             if search_in in ("state"):
-                search_domain = OR([search_domain, [("state", "ilike", search)]])
+                search_domain = OR(
+                    [search_domain, [("state", "ilike", search)]])
             domain += search_domain
 
         if not isManager:
@@ -67,10 +70,12 @@ class CustomerPortal(CustomerPortal):
         "/my/portal_orders/<int:order_id>", type="http", auth="user", website=True
     )
     def portal_my_order(self, order_id=None, access_token=None, **kw):
-        isManager = request.env.user.has_group("portal_orders.group_portal_manager")
+        isManager = request.env.user.has_group(
+            "portal_orders.group_portal_manager")
         order = request.env["portal.order"].sudo().browse(order_id)
 
-        values = {"page_name": "portal_orders", "order": order, "isManager": isManager}
+        values = {"page_name": "portal_orders",
+                  "order": order, "isManager": isManager}
         return request.render("portal_orders.portal_my_order", values)
 
     @http.route(
@@ -106,7 +111,8 @@ class CustomerPortal(CustomerPortal):
 
     @http.route("/my/portal_orders/tax_rate", type="json", auth="user", website=True)
     def get_tax_param(self):
-        global_tax_rate = request.env.ref("portal_orders.global_purchase_tax").amount
+        global_tax_rate = request.env.ref(
+            "portal_orders.global_purchase_tax").amount
 
         user_tax_rate = request.env.user.partner_id.portal_orders_tax_rate
 
@@ -156,7 +162,6 @@ class CustomerPortal(CustomerPortal):
         order.sudo().attachment_ids = [(4, new_attachment.id)]
 
         return order
-        # return "/my/portal_orders/"
 
     @http.route("/my/portal_orders/approve", type="json", auth="user", website=True)
     def approve_order(self, **kw):

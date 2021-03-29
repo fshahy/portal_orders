@@ -67,7 +67,6 @@ odoo.define('portal.orders', function (require) {
     _clearForm: function () {
       $('.suppliers').empty();
       $('.totals').empty();
-      // $('.signature').empty();
     },
 
     _createOrder: async function () {
@@ -76,9 +75,6 @@ odoo.define('portal.orders', function (require) {
       let inputs = $('.signature');
       for (var i = 0; i < inputs.length; i++) {
         files.push(inputs.eq(i).prop("files")[0]);
-        //files.push(inputs[i].files[0]);
-        //filename = inputs[i].files[0].name;
-        //filesize = inputs[i].files[0].size;
       }
 
       console.log(files[0]);
@@ -97,7 +93,6 @@ odoo.define('portal.orders', function (require) {
           "amount": amount
         }
       }).then(response => {
-        // console.log(response);
         window.location = "/my/portal_orders";
       });
     },
@@ -199,7 +194,6 @@ odoo.define('portal.orders', function (require) {
             "user_id": this.getSession().user_id
           }
         }).then(function (response) {
-          // alert(response.valid);
           if (response.valid && amount <= response.amount) {
             return true;
           } else {
@@ -231,11 +225,6 @@ odoo.define('portal.orders', function (require) {
           this._buttonExec($(ev.currentTarget), this._createOrder);
         }
       });
-
-      // if (this._validateForm()) {
-      //   alert('create.......');
-      //   this._buttonExec($(ev.currentTarget), this._createOrder);
-      // }
     },
 
   });
@@ -247,8 +236,6 @@ odoo.define('portal.orders', function (require) {
     },
 
     _onApproveOrder: function (ev) {
-      // alert('approved');
-
       const order_id = $('.approve_portal_order').attr('data-id');
       this._rpc({
         route: '/my/portal_orders/approve',
@@ -268,8 +255,6 @@ odoo.define('portal.orders', function (require) {
     },
 
     _onRejectOrder: function (ev) {
-      // alert('rejected');
-
       const order_id = $('.reject_portal_order').attr('data-id');
       this._rpc({
         route: '/my/portal_orders/reject',
@@ -300,6 +285,4 @@ odoo.define('portal.orders', function (require) {
       });
     },
   });
-
-
 });

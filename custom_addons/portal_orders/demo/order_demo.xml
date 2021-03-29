@@ -2,7 +2,6 @@
 <odoo>
   <data>
 
-
     <!-- Vendors -->
     <record id="portal_vendor_1" model="res.partner">
       <field name="name">Vendor 1</field>

@@ -1,6 +1,4 @@
-from collections import defaultdict
-from odoo import models, api, fields, _
-from odoo.exceptions import AccessError
+from odoo import models, api, fields
 
 
 class CustomAttachment(models.Model):
