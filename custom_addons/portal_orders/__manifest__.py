@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     "name": "Portal Orders",
     "version": "1.0",
