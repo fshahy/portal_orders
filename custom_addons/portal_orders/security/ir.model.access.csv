@@ -3,9 +3,11 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "access_portal_order_employee","portal_order portal_employee","model_portal_order","portal_orders.group_portal_employee",1,1,1,0
 "access_portal_order_group_user","portal_order group_user","model_portal_order","base.group_user",1,1,0,0
 
-
-"access_res_partner_portal_manager","res_partner portal_manager","base.model_res_partner","portal_orders.group_portal_manager",1,0,1,0
+"access_res_partner_portal_manager","res_partner portal_manager","base.model_res_partner","portal_orders.group_portal_manager",1,0,0,0
 "access_res_partner_portal_employee","res_partner portal_employee","base.model_res_partner","portal_orders.group_portal_employee",1,0,0,0
+
+"access_product_product_portal_manager","product_product portal_manager","product.model_product_product","portal_orders.group_portal_manager",1,0,0,0
+"access_product_product_portal_employee","product_product portal_employee","product.model_product_product","portal_orders.group_portal_employee",1,0,0,0
 
 "access_product_template_portal_manager","product_template portal_manager","product.model_product_template","portal_orders.group_portal_manager",1,0,0,0
 "access_product_template_portal_employee","product_template portal_employee","product.model_product_template","portal_orders.group_portal_employee",1,0,0,0
@@ -13,14 +15,27 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "access_product_category_portal_manager","product_category portal_manager","product.model_product_category","portal_orders.group_portal_manager",1,0,0,0
 "access_product_category_portal_employee","product_category portal_employee","product.model_product_category","portal_orders.group_portal_employee",1,0,0,0
 
-"access_product_product_portal_manager","product_product portal_manager","product.model_product_product","portal_orders.group_portal_manager",1,0,0,0
-"access_product_product_portal_employee","product_product portal_employee","product.model_product_product","portal_orders.group_portal_employee",1,0,0,0
+"access_product_packaging_portal_employee","product_packaging portal_employee","product.model_product_packaging","portal_orders.group_portal_employee",1,0,0,0
+
+"access_product_pricelist_item_portal_employee","product_pricelist_item portal_employee","product.model_product_pricelist_item","portal_orders.group_portal_employee",1,0,0,0
+
+"access_product_template_attribute_value_manager","product_template_attribute_value portal_manager","product.model_product_template_attribute_value","portal_orders.group_portal_manager",1,0,0,0
+"access_product_template_attribute_value_employee","product_template_attribute_value portal_employee","product.model_product_template_attribute_value","portal_orders.group_portal_employee",1,0,0,0
+
+"access_product_attribute_manager","product_attribute portal_manager","product.model_product_attribute","portal_orders.group_portal_manager",1,0,0,0
+"access_product_attribute_employee","product_attribute portal_employee","product.model_product_attribute","portal_orders.group_portal_employee",1,0,0,0
 
 "access_product_supplierinfo_portal_manager","product_supplierinfo portal_manager","product.model_product_supplierinfo","portal_orders.group_portal_manager",1,0,0,0
 "access_product_supplierinfo_portal_employee","product_supplierinfo portal_employee","product.model_product_supplierinfo","portal_orders.group_portal_employee",1,0,0,0
 
+"access_ir_attachment_manager","ir_attachment portal_manager","base.model_ir_attachment","portal_orders.group_portal_manager",1,0,0,0
+"access_ir_attachment_employee","ir_attachment portal_employee","base.model_ir_attachment","portal_orders.group_portal_employee",1,1,1,0
+
+"access_account_tax_manager","account_tax portal_manager","account.model_account_tax","portal_orders.group_portal_manager",1,0,0,0
+"access_account_tax_employee","account_tax portal_employee","account.model_account_tax","portal_orders.group_portal_employee",1,0,0,0
+
 "access_mail_compose_message_portal_manager","mail_compose_message portal_manager","mail.model_mail_compose_message","portal_orders.group_portal_manager",1,1,1,0
-"access_mail_compose_message_portal_employee","mail_compose_message portal_employee","mail.model_mail_compose_message","portal_orders.group_portal_employee",1,0,1,0
+"access_mail_compose_message_portal_employee","mail_compose_message portal_employee","mail.model_mail_compose_message","portal_orders.group_portal_employee",1,1,1,0
 
 "access_mail_template_portal_manager","mail_template portal_manager","mail.model_mail_template","portal_orders.group_portal_manager",1,0,0,0
 "access_mail_template_portal_employee","mail_template portal_employee","mail.model_mail_template","portal_orders.group_portal_employee",1,0,0,0
@@ -28,40 +43,18 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "access_ir_config_parameter_portal_manager","ir_config_parameter portal_manager","mail.model_ir_config_parameter","portal_orders.group_portal_manager",1,0,0,0
 "access_ir_config_parameter_portal_employee","ir_config_parameter portal_employee","mail.model_ir_config_parameter","portal_orders.group_portal_employee",1,0,0,0
 
-"access_mail_message_portal_manager","mail_message portal_manager","mail.model_mail_message","portal_orders.group_portal_manager",1,1,1,0
-"access_mail_message_portal_employee","mail_message portal_employee","mail.model_mail_message","portal_orders.group_portal_employee",1,1,1,0
+"access_mail_message_portal_manager","mail_message portal_manager","mail.model_mail_message","portal_orders.group_portal_manager",1,0,1,0
+"access_mail_message_portal_employee","mail_message portal_employee","mail.model_mail_message","portal_orders.group_portal_employee",1,0,1,0
 
-"access_ir_sequence_portal_manager","ir_sequence portal_manager","base.model_ir_sequence","portal_orders.group_portal_manager",1,0,1,0
-"access_ir_sequence_portal_employee","ir_sequence portal_employee","base.model_ir_sequence","portal_orders.group_portal_employee",1,0,1,0
+"access_portal_order_picking_date_wizard_group_user","portal_order_picking_date_wizard group_user","model_portal_order_picking_date_wizard","base.group_user",1,0,1,0
 
-"access_purchase_order_portal_manager","purchase_order portal_manager","purchase.model_purchase_order","portal_orders.group_portal_manager",1,0,1,0
-"access_purchase_order_portal_employee","purchase_order portal_employee","purchase.model_purchase_order","portal_orders.group_portal_employee",1,0,1,0
+"access_ir_sequence_portal_manager","ir_sequence portal_manager","base.model_ir_sequence","portal_orders.group_portal_manager",1,0,0,0
+"access_ir_sequence_portal_employee","ir_sequence portal_employee","base.model_ir_sequence","portal_orders.group_portal_employee",1,0,0,0
 
-"access_purchase_order_line_portal_manager","purchase_order_line portal_manager","purchase.model_purchase_order_line","portal_orders.group_portal_manager",1,0,1,0
 "access_purchase_order_line_portal_employee","purchase_order_line portal_employee","purchase.model_purchase_order_line","portal_orders.group_portal_employee",1,0,1,0
 
-"access_account_tax_manager","account_tax portal_manager","account.model_account_tax","portal_orders.group_portal_manager",1,0,0,0
-"access_account_tax_employee","account_tax portal_employee","account.model_account_tax","portal_orders.group_portal_employee",1,0,0,0
+"access_purchase_order_portal_employee","purchase_order portal_employee","purchase.model_purchase_order","portal_orders.group_portal_employee",1,0,1,0
 
-"access_account_tax_group_manager","account_tax_group portal_manager","account.model_account_tax_group","portal_orders.group_portal_manager",1,0,0,0
-"access_account_tax_group_employee","account_tax_group portal_employee","account.model_account_tax_group","portal_orders.group_portal_employee",1,0,0,0
+"access_uom_uom_employee","uom_uom portal_employee","product.model_uom_uom","portal_orders.group_portal_employee",1,0,0,0
 
-"access_portal_order_picking_date_wizard_group_user","portal_order_picking_date_wizard group_user","model_portal_order_picking_date_wizard","base.group_user",1,1,1,0
-
-"access_ir_attachment_manager","ir_attachment portal_manager","base.model_ir_attachment","portal_orders.group_portal_manager",1,0,0,0
-"access_ir_attachment_employee","ir_attachment portal_employee","base.model_ir_attachment","portal_orders.group_portal_employee",1,0,0,0
-
-"access_ir_attachment_custom_manager","ir_attachment_custom portal_manager","portal_orders.model_ir_attachment_custom","portal_orders.group_portal_manager",1,0,0,0
-"access_ir_attachment_custom_employee","ir_attachment_custom portal_employee","portal_orders.model_ir_attachment_custom","portal_orders.group_portal_employee",1,0,0,0
-"access_ir_attachment_custom_group_user","ir_attachment_custom group_user","portal_orders.model_ir_attachment_custom","base.group_user",1,1,1,0
-
-
-"access_product_template_attribute_value_manager","product_template_attribute_value portal_manager","product.model_product_template_attribute_value","portal_orders.group_portal_manager",1,0,0,0
-"access_product_template_attribute_value_employee","product_template_attribute_value portal_employee","product.model_product_template_attribute_value","portal_orders.group_portal_employee",1,0,0,0
-
-"access_product_attribute_value_manager","product_attribute_value portal_manager","product.model_product_attribute_value","portal_orders.group_portal_manager",1,0,0,0
-"access_product_attribute_value_employee","product_attribute_value portal_employee","product.model_product_attribute_value","portal_orders.group_portal_employee",1,0,0,0
-
-"access_product_attribute_manager","product_attribute portal_manager","product.model_product_attribute","portal_orders.group_portal_manager",1,0,0,0
-"access_product_attribute_employee","product_attribute portal_employee","product.model_product_attribute","portal_orders.group_portal_employee",1,0,0,0
-
+"access_product_template_attribute_line_employee","product_template_attribute_line portal_employee","product.model_product_template_attribute_line","portal_orders.group_portal_employee",1,0,0,0
