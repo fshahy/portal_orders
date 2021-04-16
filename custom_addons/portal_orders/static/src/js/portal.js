@@ -186,21 +186,6 @@ odoo.define('portal.orders', function (require) {
       if (amount == "" || isNaN(amount) || amount < 1 || amount > 3) {
         alert('invalid amount');
         return Promise.resolve(false);
-      } else {
-        this._rpc({
-          route: '/my/portal_orders/check',
-          params: {
-            "amount": amount,
-            "user_id": this.getSession().user_id
-          }
-        }).then(function (response) {
-          if (response.valid && amount <= response.amount) {
-            return true;
-          } else {
-            alert(`your allowed amount is max: ${response.amount}`);
-            return false;
-          }
-        });
       }
 
       if ($('.supplier_offer:checked').val() === undefined) {
@@ -213,7 +198,20 @@ odoo.define('portal.orders', function (require) {
         return Promise.resolve(false);
       }
 
-      return Promise.resolve(true);
+      return this._rpc({
+        route: '/my/portal_orders/check',
+        params: {
+          "amount": amount,
+          "user_id": this.getSession().user_id
+        }
+      }).then(function (response) {
+        if (response.valid && amount <= response.amount) {
+          return true;
+        } else {
+          alert(`your allowed amount is max: ${response.amount}`);
+          return false;
+        }
+      });
     },
 
     _onNewOrderConfirm: async function (ev) {
