@@ -148,7 +148,7 @@ class CustomerPortal(CustomerPortal):
             .sudo()
             .create(
                 {
-                    "name": "Employee_Signature.pdf",
+                    "name": f"Employee_Signature_{order.id}.pdf",
                     "type": "binary",
                     "datas": pdf,
                     "mimetype": "application/x-pdf",
