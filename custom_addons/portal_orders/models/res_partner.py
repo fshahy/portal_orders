@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import fields, models
 
 
@@ -25,10 +26,8 @@ class Partner(models.Model):
         user = self.env["res.users"].browse(user_id)
 
         categ_ids = [categ.id for categ in user.allowed_product_category_ids]
-        products = (
-            self.env["product.product"]
-            .sudo()
-            .search_read([("categ_id", "in", categ_ids)])
+        products = self.env["product.product"].search_read(
+            [("categ_id", "in", categ_ids)]
         )
 
         return products

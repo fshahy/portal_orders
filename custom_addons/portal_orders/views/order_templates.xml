@@ -317,7 +317,7 @@
             <ul>
               <t t-foreach="order.attachment_ids" t-as="a">
                 <li>
-                  <a t-attf-href="data:application/pdf;base64,{{ a.datas }}" target="new">
+                  <a t-attf-href="data:application/pdf;base64,{{ a.sudo().datas }}" target="new">
                     <strong>
                       <span t-field="a.name" />
                     </strong>

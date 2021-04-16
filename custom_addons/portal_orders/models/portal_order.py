@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -10,11 +11,9 @@ class PortalOrder(models.Model):
         "mail.thread",
     ]
 
-    name = fields.Char(string="Order Number", required=True,
-                       index=True, default="New")
+    name = fields.Char(string="Order Number", required=True, index=True, default="New")
 
-    product_id = fields.Many2one(
-        "product.product", string="Product", required=True)
+    product_id = fields.Many2one("product.product", string="Product", required=True)
 
     amount = fields.Integer(string="Amount", required=True)
     tax = fields.Integer(string="Tax", required=True)
@@ -22,9 +21,11 @@ class PortalOrder(models.Model):
     supplierinfo_id = fields.Many2one("product.supplierinfo", "Supplier Info")
 
     gross_price = fields.Float(
-        string="Gross Price", compute="_calc_gross_price")
+        digits=(6, 2), string="Gross Price", compute="_calc_gross_price"
+    )
     taxed_price = fields.Float(
-        string="Taxed Price", compute="_calc_taxed_price")
+        digits=(6, 2), string="Taxed Price", compute="_calc_taxed_price"
+    )
 
     user_id = fields.Many2one(
         "res.users",
@@ -52,8 +53,7 @@ class PortalOrder(models.Model):
         default=lambda self: self.env.company,
     )
 
-    attachment_ids = fields.Many2many(
-        "ir.attachment.custom", string="Attachments")
+    attachment_ids = fields.Many2many("ir.attachment", string="Attachments")
 
     attachments_count = fields.Integer(
         string="Number of Attachments", compute="_get_attachments_count"
@@ -79,13 +79,9 @@ class PortalOrder(models.Model):
     @api.model
     def create(self, vals):
         if vals.get("name", "New") == "New":
-            vals["name"] = (
-                self.env["ir.sequence"].sudo().next_by_code(
-                    "portal.order") or "/"
-            )
+            vals["name"] = self.env["ir.sequence"].next_by_code("portal.order") or "/"
 
-        template_id = self.env.ref(
-            "portal_orders.email_template_portal_order_created")
+        template_id = self.env.ref("portal_orders.email_template_portal_order_created")
 
         order = super(PortalOrder, self).create(vals)
         order.message_post_with_template(template_id.id)
@@ -123,7 +119,6 @@ class PortalOrder(models.Model):
 
     def set_done(self):
         if not self.picking_date:
-            raise ValidationError(
-                "must set a picking date before finishing order")
+            raise ValidationError("must set a picking date before finishing order")
         else:
             self.state = "done"

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import http
 import base64
 from odoo.http import request
@@ -5,13 +6,12 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.osv.expression import OR
 
 
-class CustomerPortal(CustomerPortal):
+class PortalOrders(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
 
         if "portal_orders_count" in counters:
-            values["portal_orders_count"] = request.env["portal.order"].search_count([
-            ])
+            values["portal_orders_count"] = request.env["portal.order"].search_count([])
 
         return values
 
@@ -19,8 +19,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_orders(self, search=None, search_in="name", **kw):
         values = self._prepare_portal_layout_values()
 
-        isManager = request.env.user.has_group(
-            "portal_orders.group_portal_manager")
+        isManager = request.env.user.has_group("portal_orders.group_portal_manager")
 
         searchbar_inputs = {
             "name": {
@@ -40,17 +39,15 @@ class CustomerPortal(CustomerPortal):
         if search and search_in:
             search_domain = []
             if search_in in ("name"):
-                search_domain = OR(
-                    [search_domain, [("name", "ilike", search)]])
+                search_domain = OR([search_domain, [("name", "ilike", search)]])
             if search_in in ("state"):
-                search_domain = OR(
-                    [search_domain, [("state", "ilike", search)]])
+                search_domain = OR([search_domain, [("state", "ilike", search)]])
             domain += search_domain
 
         if not isManager:
             orders = PortalOrder.search(domain)
         else:
-            orders = PortalOrder.sudo().search(domain)
+            orders = PortalOrder.search(domain)
 
         values = {
             "page_name": "portal_orders",
@@ -65,16 +62,22 @@ class CustomerPortal(CustomerPortal):
         return request.render("portal_orders.portal_my_orders", values)
 
     @http.route(
-        "/my/portal_orders/<int:order_id>", type="http", auth="user", website=True
+        "/my/portal_orders/<model('portal.order'):order>",
+        type="http",
+        auth="user",
+        website=True,
     )
-    def portal_my_order(self, order_id=None, access_token=None, **kw):
-        isManager = request.env.user.has_group(
-            "portal_orders.group_portal_manager")
-        order = request.env["portal.order"].sudo().browse(order_id)
+    def portal_my_order(self, order=None, **kw):
+        # if order:
+        isManager = request.env.user.has_group("portal_orders.group_portal_manager")
 
-        values = {"page_name": "portal_orders",
-                  "order": order, "isManager": isManager}
+        values = {
+            "page_name": "portal_orders",
+            "order": order,
+            "isManager": isManager,
+        }
         return request.render("portal_orders.portal_my_order", values)
+        # else:
 
     @http.route(
         "/my/portal_orders/product_suppliers", type="json", auth="user", website=True
@@ -109,8 +112,7 @@ class CustomerPortal(CustomerPortal):
 
     @http.route("/my/portal_orders/tax_rate", type="json", auth="user", website=True)
     def get_tax_param(self):
-        global_tax_rate = request.env.ref(
-            "portal_orders.global_purchase_tax").amount
+        global_tax_rate = request.env.ref("portal_orders.global_purchase_tax").amount
 
         user_tax_rate = request.env.user.partner_id.portal_orders_tax_rate
 
@@ -127,24 +129,20 @@ class CustomerPortal(CustomerPortal):
         if not tax:
             tax = request.env.ref("portal_orders.global_purchase_tax").amount
 
-        order = (
-            request.env["portal.order"]
-            .sudo()
-            .create(
-                {
-                    "name": "New",
-                    "product_id": productId,
-                    "amount": amount,
-                    "tax": tax,
-                    "supplierinfo_id": supplierInfoId,
-                }
-            )
+        order = request.env["portal.order"].create(
+            {
+                "name": "New",
+                "product_id": productId,
+                "amount": amount,
+                "tax": tax,
+                "supplierinfo_id": supplierInfoId,
+            }
         )
 
         pdf = post["file"].lstrip("data:application/pdf;base64,")
 
         new_attachment = (
-            request.env["ir.attachment.custom"]
+            request.env["ir.attachment"]
             .sudo()
             .create(
                 {
@@ -157,7 +155,7 @@ class CustomerPortal(CustomerPortal):
             )
         )
 
-        order.sudo().attachment_ids = [(4, new_attachment.id)]
+        order.attachment_ids = [(4, new_attachment.id)]
 
         return order
 
@@ -194,13 +192,13 @@ class CustomerPortal(CustomerPortal):
 
         tax = request.env.ref("portal_orders.global_purchase_tax")
 
-        po = PurchaseOrder.sudo().create(
+        po = PurchaseOrder.create(
             {
                 "partner_id": order.supplierinfo_id.name.id,
             }
         )
 
-        PurchaseOrderLine.sudo().create(
+        PurchaseOrderLine.create(
             {
                 "name": order.name,
                 "product_id": order.product_id.id,
