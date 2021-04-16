@@ -18,8 +18,6 @@ class CustomerPortal(CustomerPortal):
     @http.route("/my/portal_orders", type="http", auth="user", website=True)
     def portal_my_orders(self, search=None, search_in="name", **kw):
         values = self._prepare_portal_layout_values()
-        print("**", search_in)
-        print("**", search)
 
         isManager = request.env.user.has_group(
             "portal_orders.group_portal_manager")
