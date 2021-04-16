@@ -52,11 +52,11 @@ odoo.define('portal.orders', function (require) {
 
         $('.totals').append(`
           <label class="total_gross_price">
-            Totax gross price is: ${currency_symbol}${this.gross_total}
+            Totax gross price is: ${currency_symbol}${Number((this.gross_total).toFixed(2))}
           </label>
           <br/>
           <label class="total_taxed_price">
-            Totax taxed price is: ${currency_symbol}${this.taxed_total}
+            Totax taxed price is: ${currency_symbol}${Number((this.taxed_total).toFixed(2))}
           </label>
         `);
       } else {
