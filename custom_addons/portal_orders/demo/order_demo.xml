@@ -252,36 +252,34 @@
       ])]" />
     </record>
 
+    <!-- Attachments -->
+    <record id="attach_1" model="ir.attachment">
+      <field name="name">attach_1.pdf</field>
+      <field name="datas" type="base64" file="portal_orders/demo/attach_1.pdf"></field>
+      <field name="res_model">portal.order</field>
+    </record>
+
+    <record id="attach_2" model="ir.attachment">
+      <field name="name">attach_2.pdf</field>
+      <field name="datas" type="base64" file="portal_orders/demo/attach_2.pdf"></field>
+      <field name="res_model">portal.order</field>
+    </record>
+
+    <record id="attach_3" model="ir.attachment">
+      <field name="name">attach_3.pdf</field>
+      <field name="datas" type="base64" file="portal_orders/demo/attach_3.pdf"></field>
+      <field name="res_model">portal.order</field>
+    </record>
+
     <!-- Porta Orders -->
-    <record id="portal_order_1" model="portal.order">
+    <record id="order_1" model="portal.order">
       <field name="name">New</field>
       <field name="user_id" ref="portal_employee_1" />
       <field name="product_id" ref="product_template_product_1" />
       <field name="supplierinfo_id" ref="supplier_info_1" />
       <field name="amount">1</field>
       <field name="tax">10</field>
-    </record>
-
-    <!-- Attachments -->
-    <record id="attach_1" model="ir.attachment.custom">
-      <field name="name">attach_1.pdf</field>
-      <field name="datas" type="base64" file="portal_orders/demo/attach_1.pdf"></field>
-      <field name="res_model">portal.order</field>
-      <!-- <field name="res_id" ref="portal_orders.order_1" /> -->
-    </record>
-
-    <record id="attach_2" model="ir.attachment.custom">
-      <field name="name">attach_2.pdf</field>
-      <field name="datas" type="base64" file="portal_orders/demo/attach_2.pdf"></field>
-      <field name="res_model">portal.order</field>
-      <!-- <field name="res_id" ref="portal_orders.order_1" /> -->
-    </record>
-
-    <record id="attach_3" model="ir.attachment.custom">
-      <field name="name">attach_3.pdf</field>
-      <field name="datas" type="base64" file="portal_orders/demo/attach_3.pdf"></field>
-      <field name="res_model">portal.order</field>
-      <!-- <field name="res_id" ref="portal_orders.order_1" /> -->
+      <field name="attachment_ids" eval="[(6, 0, [ref('attach_1'), ref('attach_2'), ref('attach_3')])]" />
     </record>
 
   </data>
