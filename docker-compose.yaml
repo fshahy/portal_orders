@@ -8,9 +8,9 @@ services:
     ports:
       - "8069:8069"
     volumes:
-      - odoo-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
       - ./custom_addons:/mnt/extra-addons
+      - ./web-data:/var/lib/odoo
+      - ./config:/etc/odoo
   db:
     image: postgres:11
     environment:
@@ -19,7 +19,9 @@ services:
       - POSTGRES_USER=odoo
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data/pgdata
+      - ./db-data:/var/lib/postgresql/data/pgdata
 volumes:
-  odoo-web-data:
-  odoo-db-data:
+  custom_addons:
+  config:
+  web-data:
+  db-data:
