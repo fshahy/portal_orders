@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="portal_entry_portal_orders" model="portal.entry">
+        <field name="name">Portal Orders</field>
+        <field name="description">Request products and follow your purchase requests</field>
+        <field name="url">/my/portal_orders</field>
+        <field name="image" type="bytes" file="web/static/img/rfq.svg"/>
+        <field name="placeholder_count">portal_orders_count</field>
+        <field name="sequence" eval="120"/>
+    </record>
+
+</odoo>

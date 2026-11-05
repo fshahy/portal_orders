@@ -1,54 +1,108 @@
-# Odoo Developer Test Case
-When an employee needs to buy something, he/she can create and order for this
-product and select from which vendor he/she wants to buy. 
+# Portal Orders
 
-The order has to be approved by the manager and the product is purchased from that vendor. 
-Once the product is sent to the company, the employee can pick it up at the office.
+An Odoo 20.0 addon (`custom_addons/portal_orders`) that lets employees request
+products to buy from the **website portal**, without giving them a backend
+account.
 
-Is also possible that the Manager rejects the order, based on the company’s decision. In
-that case, the employee can create a new order only the next month (it can be for the
-same product or for a different product).
+A manager approves or rejects each request, also from the portal. An approved
+request becomes a real Odoo **purchase order** for the vendor the employee
+chose. Once the goods arrive, the back office sets a pick-up date and the
+employee collects them at the office.
 
-For employees and managers, we want to handle this logic using portals, and only give
-backend access to our accounting team to confirm the sales, purchases, invoices, etc.
+Only the back-office team (purchasing, accounting) needs internal Odoo users.
+Employees and managers are portal users.
 
-## Features
-* 2 new kind of users, besides the one that already exists in Odoo:
-  * Portal Employee
-  * Portal Manager
-  * Internal Users
-* Access backend through the portal
-* List-view and form-view of orders.
-* Each user sees only his/her own orders.
-* Manager sees all orders.
-* Uses product variations.
-* Can search orders in list view.
-* Users can only see producs from categories they are allowed to.
-* Access ir.attachment model from portal.
-* Use email templates for sending emails.
-* Configurable global tax for portal orders.
-* User specific tax which overrides the global tax.
-* Global limit (currently 3) on the quantity of products to purchase for orders.
-* User specific limit for quantity of products to purchase which overrides the global value of 3.
-* Generates a purchase order bases on the portal order.
-* Set picking date using a wizard.
-* Website for validation.
-* Attaching files through website has a limit of 5MB size.
-* Manager can approve or reject orders.
-* Include some python unit tests and demo data.
+## Who does what
 
-## How to use
-There are 2 sample users (employees) which can be used to login to the portal and create orders:
-* username alice@example.com and password `alice`
-* username bob@example.com and password `bob`
+| Role | Odoo user type | What they do |
+| --- | --- | --- |
+| **Employee** | Portal (group *Portal Orders / Employee*) | Creates requests, sees only their own, clicks *Buy Product* once a request is approved |
+| **Manager** | Portal (group *Portal Orders / Manager*) | Sees every request, approves or rejects drafts |
+| **Internal user** | Internal | Follows requests being purchased, sets the pick-up date, closes them |
 
-also there is a sample manager with the following credentials which can approve or reject orders created by employees:
-* username john@example.com and password `bob`
+## How a request flows
 
-the internal user data is as follows:
-* username ingrid@example.com and password `ingrid`
+```
+Draft --(manager approves)--> Approved --(employee: Buy Product)--> Purchase in progress
+  |                                                                         |
+  +--(manager rejects)--> Rejected                    (internal user sets pick-up date)
+                                                                            v
+                                     Done <--(internal user: Done)-- Ready to pick-up
+```
 
-only orders in the state of `purchase_in_progress` show to the internals user. 
-After receiving the product, an internal user can select a picking date for the portal order.
-The employee goes to the office at that date and receives the products.
-Then the internal user can close the order by pressing the done button.
+1. **Create.** On `/my/portal_orders` the employee clicks *Create New* and:
+   - picks a product (only products from the categories they are allowed to
+     see, including variants such as color and size);
+   - enters a quantity (at most their personal limit, never more than 3);
+   - picks one of the product's vendors and their price;
+   - attaches the signed request as a PDF of at most 5MB.
+
+   The form shows the gross and taxed totals before confirming. The request
+   gets a number (`PPO0001`, ...) and the managers receive an email.
+2. **Approve or reject.** A manager opens the request on the portal and approves
+   or rejects it. The employee receives an email either way.
+3. **Buy.** On an approved request the employee clicks *Buy Product*. This
+   creates a draft purchase order for the chosen vendor, with the product,
+   quantity, vendor price and the global purchase tax. The request moves to
+   *Purchase in progress*.
+4. **Pick-up date.** In the backend menu *Portal Orders*, an internal user sees
+   the requests that are in progress or ready. Once the goods are in, they use
+   *Set Picking Date*. The request moves to *Ready to pick-up* and the employee
+   receives an email with the date.
+5. **Done.** After the employee collects the goods, the internal user clicks
+   *Done*.
+
+Every step is logged in the request's chatter.
+
+## Configuration
+
+Per-employee settings are on the contact form, in the *Purchase* section:
+
+- **Portal Order Limit**: highest quantity the employee may request (1 to 3).
+- **Allowed Product Categories**: the product categories the employee can
+  order from.
+- **Portal Orders Tax Rate (%)**: a personal tax rate. Leave it at 0 to use
+  the global one.
+
+The global tax is the *Global Purchase Tax* (66% by default), in
+*Accounting > Configuration > Taxes*. It is also the tax put on the generated
+purchase orders.
+
+Outgoing emails go through the *localhost* mail server (`127.0.0.1:1025`,
+meant for a local MailHog). Change it in *Settings > Technical > Outgoing Mail
+Servers* for real use.
+
+## Demo data
+
+Installing with demo data creates two products with variants, four vendors,
+one sample request and these users (the password is the first name):
+
+| Login | Password | Role |
+| --- | --- | --- |
+| `alice@example.com` | `alice` | Employee: limit 2, own tax rate 20%, *Product Category 1* |
+| `bob@example.com` | `bob` | Employee: limit 3, global tax, *Product Category 2* |
+| `john@example.com` | `john` | Manager |
+| `ingrid@example.com` | `ingrid` | Internal user (Purchase user) |
+
+## Running
+
+```bash
+docker-compose up -d    # Odoo 20 on http://localhost:8069 (master password "admin"), Postgres 16
+```
+
+Create a database with demo data, then install *Portal Orders* from the Apps
+menu. Upgrade after code changes:
+
+```bash
+docker-compose exec web odoo -c /etc/odoo/odoo.conf -d <db> -u portal_orders --stop-after-init --no-http
+```
+
+Run the tests (they need the demo data):
+
+```bash
+docker-compose exec web odoo -c /etc/odoo/odoo.conf -d <db> -u portal_orders --test-enable --test-tags /portal_orders --stop-after-init --no-http
+```
+
+The browser tour test (`test_tours`) needs Chrome and the `websocket-client`
+Python package in the Odoo container. The stock `odoo:20.0` image has neither,
+so it is skipped there.
