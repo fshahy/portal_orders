@@ -1,25 +1,37 @@
-version: '2'
-
 services:
   web:
-    image: odoo:14.0
+    image: odoo:20.0
+    container_name: odoo_20_po
     depends_on:
       - db
     ports:
       - "8069:8069"
     volumes:
-      - odoo-web-data:/var/lib/odoo
-      - ./custom_addons:/mnt/extra-addons
+      - odoo-web-data-po20:/var/lib/odoo
       - ./config:/etc/odoo
+      - ./custom_addons:/mnt/custom_addons
   db:
-    image: postgres:11
+    image: postgres:16
+    container_name: postgres_16_po
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data/pgdata
+      - odoo-db-data-po20:/var/lib/postgresql/data/pgdata
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin4_po
+  #   restart: always
+  #   ports:
+  #     - "8888:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@fshahy.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   volumes:
+  #     - pgadmin-data-po:/var/lib/pgadmin
 volumes:
-  odoo-web-data:
-  odoo-db-data:
+  odoo-web-data-po20:
+  odoo-db-data-po20:
+  pgadmin-data-po:
